@@ -1,6 +1,7 @@
 from deck import Deck
 from player import Player
 
+
 class BlackJack:
 
     def __init__(self):
@@ -15,6 +16,21 @@ class BlackJack:
             self.player.draw_player_hand(1)
             self.house.draw_player_hand(1)
 
+    def serialize_state(self):
+        return {
+            "player_hand": self.player.current_hand,
+            "house_hand": self.house.current_hand,
+        }
+
+    @staticmethod
+    def deserialize_state(state):
+        game = BlackJack()
+
+        game.player.current_hand = state["player_hand"]
+
+        game.house.current_hand = state["house_hand"]
+
+        return game
 
     def calculate_hand(self):
         total_val = 0
@@ -24,27 +40,26 @@ class BlackJack:
             current_val = int(self.player.current_hand[i][0])
             i += 1
 
-            if ((current_val != 1) & (current_val <= 10)):
+            if (current_val != 1) & (current_val <= 10):
                 total_val += current_val
                 pass
 
-            if ((current_val) > (10)):
-                current_val = 10 
+            if (current_val) > (10):
+                current_val = 10
                 total_val += current_val
-                pass    
+                pass
 
-            if current_val == 1: 
-                if ((total_val + current_val) > (21)):
+            if current_val == 1:
+                if (total_val + current_val) > (21):
                     current_val = 1
                     total_val += current_val
                     pass
-                if ((total_val + current_val) < (21)):
+                if (total_val + current_val) < (21):
                     current_val = 11
                     total_val += current_val
                     pass
-        
+
         return total_val
-    
 
     def calculate_house_hand(self):
         total_val = 0
@@ -54,28 +69,26 @@ class BlackJack:
             current_val = int(self.house.current_hand[i][0])
             i += 1
 
-            if ((current_val != 1) & (current_val <= 10)):
+            if (current_val != 1) & (current_val <= 10):
                 total_val += current_val
                 pass
 
             if current_val > 10:
-                current_val = 10 
+                current_val = 10
 
-            if current_val == 1: 
-                if ((total_val + current_val) > (21)):
+            if current_val == 1:
+                if (total_val + current_val) > (21):
                     current_val = 1
                     total_val += current_val
                     pass
-                if ((total_val + current_val) < (21)):
+                if (total_val + current_val) < (21):
                     current_val = 11
                     total_val += current_val
                     pass
 
             total_val += current_val
 
-        
         return total_val
-
 
     def hit(self):
         self.player.draw_player_hand(1)
@@ -115,7 +128,7 @@ def play_blackjack():
 
         if house_value > player_val:
             return 0
-        
+
         game.house_hit()
 
 
@@ -135,5 +148,5 @@ def test_results(iterations):
 
         if result == 0:
             house_wins += 1
-    
+
     return player_wins, house_wins, ties
